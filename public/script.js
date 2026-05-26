@@ -1,5 +1,5 @@
-const API_URL = 'http://localhost:3000/api'; // Change this to your backend URL
-const randomQuoteApiUrl = 'http://api.quotable.io/random';
+const API_URL = '/api';
+const randomQuoteApiUrl = 'https://api.quotable.io/random';
 const quoteDisplayElement = document.getElementById('quoteDisplay');
 const quoteInputElement = document.getElementById('quoteInput');
 const timerElement = document.getElementById('timer');
@@ -11,8 +11,6 @@ const roundHistoryElement = document.getElementById('roundHistory');
 
 // Round history storage
 let roundHistory = JSON.parse(localStorage.getItem('roundHistory')) || [];
-let currentRoundStartTime = null;
-
 // Authentication functions
 function getToken() {
     return sessionStorage.getItem('token');
@@ -208,7 +206,8 @@ if (quoteInputElement) {
 function getRandomQuote() {
     return fetch(randomQuoteApiUrl)
         .then(response => response.json())
-        .then(data => data.content);
+        .then(data => data.content)
+        .catch(() => 'Practice makes perfect. Keep typing to improve your speed and accuracy!');
 }
 
 async function renderNewQuote() {
