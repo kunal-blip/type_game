@@ -6,7 +6,7 @@ body{
     display: flex;
     min-height: 100vh;
     margin: 0;
-    background-color: #1E0555;
+    background-color: #756c88;
     justify-content: flex-start;
     align-items: flex-start;
 }
@@ -35,7 +35,7 @@ body , .quoteInput{
 }
 
 .container{
-    background-color: 	#F0B04F;
+    background-color: 	#edc982;
     padding: 1rem;
     border-radius: .5rem;
     width: 700px;
@@ -54,6 +54,7 @@ body , .quoteInput{
     margin-bottom: 1rem;
     margin-left: calc(1rem - 2px);
     margin-right: calc(1rem + 2px);
+    color: #000000;
 }
 
 .quoteInput{
