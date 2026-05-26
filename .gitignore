@@ -1,5 +1,12 @@
-login.html
 node_modules/
-users.json
-package-lock.json
-package.json
+logs/
+*.log
+coverage/
+dist/
+build/
+.env
+.env.*
+!.env.example
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
