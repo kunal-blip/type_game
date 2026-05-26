@@ -4,6 +4,7 @@ const helmet = require('helmet');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const pinoHttp = require('pino-http');
+const rateLimit = require('express-rate-limit');
 
 const config = require('./config/env');
 const logger = require('./lib/logger');
@@ -13,20 +14,13 @@ const { sanitizeUsername, sanitizePassword } = require('./utils/sanitize');
 const { readUsers, writeUsers } = require('./services/userStore');
 
 function createCorsOptions() {
-  if (config.corsOrigin === '*') {
-    return { origin: true };
-  }
-
-  const allowedOrigins = config.corsOrigin.split(',').map((origin) => origin.trim());
+  const allowedOrigins = config.corsOrigin
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
 
   return {
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-
-      return callback(new Error('Not allowed by CORS'));
-    }
+    origin: allowedOrigins
   };
 }
 
@@ -54,7 +48,14 @@ function createApp() {
 
   app.use(express.static('public'));
 
-  app.post('/api/signup', async (req, res, next) => {
+  const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 20,
+    standardHeaders: true,
+    legacyHeaders: false
+  });
+
+  app.post('/api/signup', authLimiter, async (req, res, next) => {
     try {
       const username = sanitizeUsername(req.body.username);
       const password = sanitizePassword(req.body.password);
@@ -98,7 +99,7 @@ function createApp() {
     }
   });
 
-  app.post('/api/login', async (req, res, next) => {
+  app.post('/api/login', authLimiter, async (req, res, next) => {
     try {
       const username = sanitizeUsername(req.body.username);
       const password = sanitizePassword(req.body.password);
@@ -131,14 +132,14 @@ function createApp() {
     }
   });
 
-  app.get('/api/verify', authenticateToken, (req, res) => {
+  app.get('/api/verify', authLimiter, authenticateToken, (req, res) => {
     res.json({
       valid: true,
       username: req.user.username
     });
   });
 
-  app.get('/api/profile', authenticateToken, async (req, res, next) => {
+  app.get('/api/profile', authLimiter, authenticateToken, async (req, res, next) => {
     try {
       const users = await readUsers();
       const userProfile = users[req.user.username];

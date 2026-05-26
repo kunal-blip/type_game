@@ -14,7 +14,7 @@ const config = Object.freeze({
   nodeEnv: process.env.NODE_ENV || 'development',
   port: Number(process.env.PORT) || 3000,
   jwtSecret,
-  corsOrigin: process.env.CORS_ORIGIN || '*',
+  corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:3000',
   logLevel: process.env.LOG_LEVEL || 'info',
   usersFile: process.env.USERS_FILE || path.resolve(process.cwd(), 'users.json')
 });
