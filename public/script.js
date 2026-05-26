@@ -1,5 +1,5 @@
-const API_URL = 'http://localhost:3000/api'; // Change this to your backend URL
-const randomQuoteApiUrl = 'http://api.quotable.io/random';
+const API_URL = '/api';
+const randomQuoteApiUrl = 'https://api.quotable.io/random';
 const quoteDisplayElement = document.getElementById('quoteDisplay');
 const quoteInputElement = document.getElementById('quoteInput');
 const timerElement = document.getElementById('timer');
@@ -83,11 +83,17 @@ function logout() {
     window.location.href = 'login.html';
 }
 
-// Check if user is logged in on page load for index.html
-if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
-    if (!isLoggedIn()) {
-        window.location.href = 'login.html';
-    }
+// Check authentication state on page load
+const currentPage = window.location.pathname.split('/').pop();
+const isIndexPage = currentPage === '' || currentPage === 'index.html';
+const isAuthPage = currentPage === 'login.html' || currentPage === 'signup.html';
+
+if (isIndexPage && !isLoggedIn()) {
+    window.location.href = 'login.html';
+}
+
+if (isAuthPage && isLoggedIn()) {
+    window.location.href = 'index.html';
 }
 
 // Handle login form
