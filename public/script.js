@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3000/api'; // Change this to your backend URL
+const API_URL = `${window.location.origin}/api`;
 const randomQuoteApiUrl = 'http://api.quotable.io/random';
 const quoteDisplayElement = document.getElementById('quoteDisplay');
 const quoteInputElement = document.getElementById('quoteInput');
